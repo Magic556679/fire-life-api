@@ -64,7 +64,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'slug' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('posts', 'slug')->ignore($post->id)],
-            'metaDescription' => 'nullable|string|max:500',
+            'meta_description' => 'nullable|string|max:500',
             'content' => 'sometimes|required|string',
         ]);
 
