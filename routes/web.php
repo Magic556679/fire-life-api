@@ -23,7 +23,7 @@ Route::get('/sitemap.xml', function () {
     $posts = Post::all();
     foreach ($posts as $post) {
         $sitemap->add(
-            Url::create("/blog/{$post->slug}")
+            Url::create("/blog/{$post->id}/{$post->slug}")
                 ->setLastModificationDate($post->updated_at)
         );
     }
