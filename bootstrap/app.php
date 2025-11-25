@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +19,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->append(TrustProxies::class, [
+            // 您的 Nginx 代理是通過本地連線到 Laravel 的
+            'proxies' => [
+                '127.0.0.1',
+                '::1',
+            ],
+            // 確保 Laravel 知道要使用 X-Forwarded-Proto
+            'headers' => Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // 處理認證錯誤
