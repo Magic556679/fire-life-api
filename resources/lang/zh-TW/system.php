@@ -11,4 +11,8 @@ return [
     'request_not_found' => '找不到請求的資源',
     'validation_failed' => '驗證失敗',
     'server_error' => '伺服器發生錯誤',
+
+    'image_deletion_failed' => '刪除圖片失敗',
+    'r2_upload_failed' => 'R2 上傳圖片失敗',
+    'r2_delete_failed' => '刪除 R2 圖片失敗',
 ];

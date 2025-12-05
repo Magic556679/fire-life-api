@@ -11,4 +11,8 @@ return [
     'request_not_found' => 'Requested resource not found',
     'validation_failed' => 'Validation failed',
     'server_error' => 'Server error',
+
+    'image_deletion_failed' => 'Image deletion failed',
+    'r2_upload_failed' => 'Failed to upload image to R2',
+    'r2_delete_failed' => 'Failed to delete R2 image',
 ];

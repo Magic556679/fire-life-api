@@ -7,6 +7,7 @@ return [
     'update_failed' => 'Product update failed',
     'deleted_success' => 'Product deleted successfully',
     'deletion_failed' => 'Product deletion failed',
+    'fetch_success' => 'Product fetched successfully',
 
     'title_required' => 'Product title is required',
     'price_required' => 'Product price is required',

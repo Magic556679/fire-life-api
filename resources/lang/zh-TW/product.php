@@ -7,7 +7,7 @@ return [
     'update_failed' => '商品更新失敗',
     'deleted_success' => '商品刪除成功',
     'deletion_failed' => '商品刪除失敗',
-
+    'fetch_success' => '商品取得成功',
 
     'title_required' => '商品標題必填',
     'price_required' => '商品價格必填',
