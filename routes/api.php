@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartItemController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,11 @@ Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
     Route::get('/{id}', [ProductController::class, 'show']);
 });
+
+Route::get('/cart', [CartController::class, 'show']);
+Route::post('/cart/items', [CartItemController::class, 'store']);
+Route::patch('/cart/items/{id}', [CartItemController::class, 'update']);
+Route::delete('/cart/items/{id}', [CartItemController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
