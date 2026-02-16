@@ -11,6 +11,7 @@ return [
     'guest_token_required' => '請提供 X-Guest-Token。',
     'product_not_found' => '找不到商品。',
     'item_not_found' => '購物車項目不存在。',
+    'fetch_success' => '購物車取得成功。',
 
     /*
     |--------------------------------------------------------------------------

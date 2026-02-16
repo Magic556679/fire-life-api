@@ -11,6 +11,7 @@ return [
     'guest_token_required' => 'X-Guest-Token header is required.',
     'product_not_found' => 'Product not found.',
     'item_not_found' => 'Cart item not found.',
+    'fetch_success' => 'Cart fetched successfully.',
 
     /*
     |--------------------------------------------------------------------------

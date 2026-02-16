@@ -44,7 +44,7 @@ class CartItemController extends Controller
         return response()->json([
             'success' => true,
             'message' => __('cart.item_added'),
-            'item' => $item,
+            'data' => $item,
         ]);
     }
 
@@ -71,7 +71,7 @@ class CartItemController extends Controller
         return response()->json([
             'success' => true,
             'message' => __('cart.item_updated'),
-            'item' => $item,
+            'data' => $item,
         ]);
     }
 
