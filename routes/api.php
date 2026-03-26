@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CartItemController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -26,6 +28,11 @@ Route::get('/cart', [CartController::class, 'show']);
 Route::post('/cart/items', [CartItemController::class, 'store']);
 Route::patch('/cart/items/{id}', [CartItemController::class, 'update']);
 Route::delete('/cart/items/{id}', [CartItemController::class, 'destroy']);
+
+Route::post('/order', [OrderController::class, 'store']);
+Route::post('/orders/{order_no}/checkout', [OrderController::class, 'checkout']);
+
+Route::post('/payments/ecpay/callback', [PaymentController::class, 'callback']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
