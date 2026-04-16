@@ -112,6 +112,52 @@ class OrderController extends Controller
         return 'EC' . now()->format('YmdHis') . random_int(1000, 9999);
     }
 
+    public function adminIndex()
+    {
+        $orders = Order::with('items')->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('order.fetch_success'),
+            'data' => $orders,
+        ]);
+    }
+
+    public function result($payment_trade_no)
+    {
+        $order = Order::where('payment_trade_no', $payment_trade_no)->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => __('order.not_found'),
+            ], 404);
+        }
+
+        if ($order->status !== 'paid') {
+            return response()->json([
+                'success' => false,
+                'message' => __('order.not_paid'),
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => __('order.result_success'),
+            'data' => [
+                'order_no'       => $order->order_no,
+                'status'         => $order->status,
+                'paid_at'        => $order->paid_at,
+                'total_amount'   => $order->total_amount,
+                'buyer_name'     => $order->buyer_name,
+                'buyer_email'    => $order->buyer_email,
+                'buyer_phone'    => $order->buyer_phone,
+                'store_info'     => $order->store_info,
+                'items_snapshot' => $order->items_snapshot,
+            ],
+        ]);
+    }
+
     public function checkout($order_no)
     {
         $order = Order::where('order_no', $order_no)->firstOrFail();

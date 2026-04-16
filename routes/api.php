@@ -30,9 +30,11 @@ Route::patch('/cart/items/{id}', [CartItemController::class, 'update']);
 Route::delete('/cart/items/{id}', [CartItemController::class, 'destroy']);
 
 Route::post('/order', [OrderController::class, 'store']);
+Route::get('/orders/{payment_trade_no}/result', [OrderController::class, 'result']);
 Route::post('/orders/{order_no}/checkout', [OrderController::class, 'checkout']);
 
 Route::post('/payments/ecpay/callback', [PaymentController::class, 'callback']);
+Route::post('/payments/ecpay/result', [PaymentController::class, 'result']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -53,5 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('products', [ProductController::class, 'store']);
         Route::patch('products/{id}', [ProductController::class, 'update']);
         Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+        Route::get('orders', [OrderController::class, 'adminIndex']);
     });
 });
