@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function adminIndex()
     {
-        $products = Product::with('images')->orderBy('created_at', 'desc')->paginate();
+        $products = Product::with('images')->orderBy('created_at', 'desc')->paginate(10);
 
         return response()->json([
             'success' => true,
