@@ -16,6 +16,40 @@ class PaymentController extends Controller
         $this->ecpay = $ecpay;
     }
 
+    public function result(Request $request)
+    {
+        $payment_trade_no = null;
+        $success = false;
+
+        // 解析綠界 OrderResultURL 格式：form field ResultData 內含 JSON
+        $resultDataRaw = $request->input('ResultData');
+
+        if ($resultDataRaw) {
+            $resultData = json_decode($resultDataRaw, true);
+            $dataRaw = $resultData['Data'] ?? null;
+
+            if ($dataRaw) {
+                $data = json_decode($dataRaw, true);
+                $payment_trade_no = $data['OrderInfo']['MerchantTradeNo'] ?? null;
+                $success = ($data['RtnCode'] ?? 0) == 1;
+            }
+        }
+
+        // Fallback：傳統 AIO form-encoded 格式（與 ReturnURL 相同欄位）
+        if (!$payment_trade_no) {
+            $payment_trade_no = $request->input('MerchantTradeNo');
+            $success = $request->input('RtnCode') == 1;
+        }
+
+        $frontendUrl = rtrim(env('ECPAY_ORDER_RESULT_URL'), '/');
+
+        if (!$payment_trade_no) {
+            return redirect($frontendUrl . '?error=invalid');
+        }
+
+        return redirect($frontendUrl . '/' . $payment_trade_no . '?status=' . ($success ? 'success' : 'failed'));
+    }
+
     public function callback(Request $request)
     {
         $data = $request->all();

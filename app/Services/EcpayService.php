@@ -18,9 +18,8 @@ class EcpayService
         $this->merchantID = env('ECPAY_MERCHANT_ID');
         $this->hashKey = env('ECPAY_HASH_KEY');
         $this->hashIV = env('ECPAY_HASH_IV');
-        $this->returnURL = env('ECPAY_RETURN_URL');           // 後端 callback
-        // $this->orderResultURL = env('FRONTEND_URL') . '/payment/result'; // 導回前端頁
-        // $this->paymentURL = 'https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5'; // 後端傳給前端 submit
+        $this->returnURL = env('ECPAY_RETURN_URL');           // 綠界呼叫 callback
+        $this->orderResultURL = env('ECPAY_RESULT_URL');      // 後端 result 端點，由綠界帶瀏覽器跳轉        
         $this->paymentURL = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
     }
 
@@ -43,7 +42,7 @@ class EcpayService
             'TradeDesc' => '購買二手書/電子書',
             'ItemName' => $items,
             'ReturnURL' => $this->returnURL,
-            // 'OrderResultURL' => $this->orderResultURL,
+            'OrderResultURL' => $this->orderResultURL,
             'ChoosePayment' => 'Credit', // 信用卡及銀聯卡(需申請開通)
         ];
 
