@@ -290,7 +290,7 @@ class ProductController extends Controller
             // 確保只顯示已上架的商品 (符合前台邏輯)
             ->where('status', 'active')
             // 限制只選取前台需要的公開欄位
-            ->select(['id', 'title', 'price', 'special_price', 'product_type', 'is_favorites', 'status']);
+            ->select(['id', 'title', 'price', 'special_price', 'product_type', 'stock', 'is_favorites', 'status']);
 
         // 根據 product_type 進行條件過濾
         if ($productType && in_array($productType, $allowedTypes)) {

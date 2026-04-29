@@ -15,25 +15,29 @@ class CartController extends Controller
     public function show(Request $request)
     {
         $cart = $this->cartService->getCartForUserOrGuest($request);
+        $cart->load('items.product.images');
 
         $cartData = [
             'id' => $cart->id,
             'guest_token' => $cart->guest_token,
             'items' => $cart->items->map(function ($item) {
+                $currentPrice = (float) $item->product->price;
                 return [
-                    'id' => $item->id,
+                    'id'         => $item->id,
                     'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'price' => (float) $item->price,
-                    'subtotal' => $item->price * $item->quantity,
-                    'product' => [
-                        'id' => $item->product->id,
-                        'name' => $item->product->title,
-                        'image' => $item->product->images ?? null,
+                    'quantity'   => $item->quantity,
+                    'price'      => $currentPrice,
+                    'subtotal'   => $currentPrice * $item->quantity,
+                    'product'    => [
+                        'id'           => $item->product->id,
+                        'name'         => $item->product->title,
+                        'image'        => $item->product->images ?? null,
+                        'product_type' => $item->product->product_type,
+                        'stock'        => $item->product->stock,
                     ],
                 ];
             }),
-            'total' => $cart->items->sum(fn($item) => $item->price * $item->quantity),
+            'total' => $cart->items->sum(fn($item) => (float) $item->product->price * $item->quantity),
         ];
 
         return response()->json([
