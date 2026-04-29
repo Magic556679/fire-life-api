@@ -18,7 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->api([
+            \App\Http\Middleware\SetLocale::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // 處理認證錯誤
@@ -26,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => '需要認證才能存取此資源',
+                    'message' => __('system.authentication_required'),
                 ], 401);
             }
         });
@@ -36,7 +38,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => '資源不存在',
+                    'message' => __('system.resource_not_found'),
                 ], 404);
             }
         });
@@ -46,7 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => '找不到請求的資源',
+                    'message' => __('system.request_not_found'),
                 ], 404);
             }
         });
@@ -56,7 +58,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => '驗證失敗',
+                    'message' => __('system.validation_failed'),
                     'errors' => $e->errors(),
                 ], 422);
             }
@@ -66,7 +68,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (Throwable $e, Request $request) {
             if ($request->is('api/*')) {
                 // 在生產環境中不要顯示詳細錯誤訊息
-                $message = app()->environment('production') ? '伺服器發生錯誤' : $e->getMessage();
+                $message = app()->environment('production')
+                    ? __('system.server_error')
+                    : $e->getMessage();
 
                 return response()->json([
                     'success' => false,

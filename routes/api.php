@@ -3,9 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CartItemController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -14,6 +18,23 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
+
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{id}', [ProductController::class, 'show']);
+});
+
+Route::get('/cart', [CartController::class, 'show']);
+Route::post('/cart/items', [CartItemController::class, 'store']);
+Route::patch('/cart/items/{id}', [CartItemController::class, 'update']);
+Route::delete('/cart/items/{id}', [CartItemController::class, 'destroy']);
+
+Route::post('/order', [OrderController::class, 'store']);
+Route::get('/orders/{payment_trade_no}/result', [OrderController::class, 'result']);
+Route::post('/orders/{order_no}/checkout', [OrderController::class, 'checkout']);
+
+Route::post('/payments/ecpay/callback', [PaymentController::class, 'callback']);
+Route::post('/payments/ecpay/result', [PaymentController::class, 'result']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -28,4 +49,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
 
     Route::post('/upload', [UploadController::class, 'store']);
+
+    Route::prefix('admin')->group(function () {
+        Route::get('products', [ProductController::class, 'adminIndex']);
+        Route::post('products', [ProductController::class, 'store']);
+        Route::patch('products/{id}', [ProductController::class, 'update']);
+        Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+        Route::get('orders', [OrderController::class, 'adminIndex']);
+        Route::get('orders/{id}', [OrderController::class, 'adminShow']);
+    });
 });
