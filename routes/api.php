@@ -57,5 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
         Route::get('orders', [OrderController::class, 'adminIndex']);
+        Route::get('orders/{id}', [OrderController::class, 'adminShow']);
     });
 });
