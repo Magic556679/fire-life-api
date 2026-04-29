@@ -34,6 +34,17 @@ class OrderController extends Controller
                 ->get()
                 ->keyBy('id');
 
+            // 庫存檢查（僅 physical 商品）
+            foreach ($request->items as $item) {
+                $product = $products[$item['product_id']];
+                if ($product->product_type !== 'digital' && $product->stock < $item['quantity']) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => __('order.insufficient_stock', ['title' => $product->title]),
+                    ], 422);
+                }
+            }
+
             // 組 items_snapshot
             $itemsSnapshot = collect($request->items)->map(function ($item) use ($products) {
                 $product = $products[$item['product_id']];

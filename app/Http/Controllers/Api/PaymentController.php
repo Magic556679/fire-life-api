@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\EcpayService;
 
@@ -70,8 +72,29 @@ class PaymentController extends Controller
             $order->update([
                 'status' => 'paid',
                 'paid_at' => now(),
-                'ecpay_trade_no' => $data['TradeNo'], // 存綠界交易編號
+                'ecpay_trade_no' => $data['TradeNo'],
             ]);
+
+            // 扣減實體商品庫存（付款確認後才扣）
+            $productIds = collect($order->items_snapshot)
+                ->where('type', '!=', 'digital')
+                ->pluck('product_id');
+
+            if ($productIds->isNotEmpty()) {
+                foreach ($order->items_snapshot as $item) {
+                    if (($item['type'] ?? '') === 'digital') {
+                        continue;
+                    }
+                    Product::where('id', $item['product_id'])
+                        ->decrement('stock', $item['quantity']);
+                }
+            }
+
+            if ($order->user_id) {
+                Cart::where('user_id', $order->user_id)->first()?->items()->delete();
+            } elseif ($order->guest_token) {
+                Cart::where('guest_token', $order->guest_token)->first()?->items()->delete();
+            }
         }
 
         return response('1|OK');
