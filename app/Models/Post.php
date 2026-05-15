@@ -11,5 +11,6 @@ class Post extends Model
         'slug',
         'meta_description',
         'content',
+        'og_image',
     ];
 }
